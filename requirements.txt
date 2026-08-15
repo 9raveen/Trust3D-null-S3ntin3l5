@@ -1,0 +1,5 @@
+# Track A (perception/trust/fusion) — no heavy deps needed for the mock pipeline
+# Add these when you swap in real nuScenes-mini:
+# nuscenes-devkit
+# numpy
+# scipy
