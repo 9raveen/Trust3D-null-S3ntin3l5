@@ -4,8 +4,6 @@ import sys
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-
-
 # Add src/ to Python's import path so pipeline.py can import
 # schema.py, trust_engine.py, fusion.py, etc.
 ROOT = Path(__file__).resolve().parent.parent
@@ -15,8 +13,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from pipeline import build_frame
+from sequence import build_sequence
 from real_demo_objects import REAL_DEMO_OBJECTS
-
 
 app = FastAPI(
     title="TRUST3D API",
@@ -58,6 +56,22 @@ def get_scene(
     gt_scene=REAL_DEMO_OBJECTS,
 ).to_dict()
 
+@app.get("/scene/sequence")
+def get_scene_sequence(
+    scenario: str = Query(default="normal"),
+    n_frames: int = Query(default=12),
+):
+    if scenario not in SUPPORTED_SCENARIOS:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "Unsupported scenario",
+                "supported_scenarios": sorted(SUPPORTED_SCENARIOS),
+            },
+        )
+
+    frames = build_sequence(REAL_DEMO_OBJECTS, scenario=scenario, n_frames=n_frames)
+    return [f.to_dict() for f in frames]
 
 @app.get("/health")
 def health():

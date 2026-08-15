@@ -34,9 +34,10 @@ class FusedObject:
     fused_position: list[float]
     scene_confidence: float
     anomaly: Anomaly
+    smoothed_position: list[float] | None = None  # set only in multi-frame sequences (see sequence.py)
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "object_id": self.object_id,
             "type": self.type,
             "position_3d": self.position_3d,
@@ -49,6 +50,9 @@ class FusedObject:
             "scene_confidence": self.scene_confidence,
             "anomaly": asdict(self.anomaly),
         }
+        if self.smoothed_position is not None:
+            d["smoothed_position"] = self.smoothed_position
+        return d
 
 
 @dataclass

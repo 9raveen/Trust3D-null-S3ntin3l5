@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { getScene } from "./api";
+import { useEffect, useState, useRef } from "react";
+import { getScene, getSceneSequence } from "./api";
 import "./App.css";
 
 const scenarios = [
@@ -23,6 +23,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedObject, setSelectedObject] = useState(null);
+  const [sequenceMode, setSequenceMode] = useState(false);
+  const sequenceIntervalRef = useRef(null);
 
   async function loadScene(selectedScenario) {
     try {
@@ -38,14 +40,68 @@ function App() {
     }
   }
 
+  async function startSequence(selectedScenario) {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const frames = await getSceneSequence(selectedScenario, 12);
+      let idx = 0;
+      setScene(frames[0]);
+      setLoading(false);
+
+      if (sequenceIntervalRef.current) {
+        clearInterval(sequenceIntervalRef.current);
+      }
+
+      sequenceIntervalRef.current = setInterval(() => {
+        idx = (idx + 1) % frames.length;
+        const frame = frames[idx];
+        setScene(frame);
+        setSelectedObject((prev) =>
+          prev
+            ? frame.objects.find((o) => o.object_id === prev.object_id) || null
+            : null,
+        );
+      }, 500);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  }
+
+  function stopSequence() {
+    if (sequenceIntervalRef.current) {
+      clearInterval(sequenceIntervalRef.current);
+      sequenceIntervalRef.current = null;
+    }
+  }
+
+  function toggleSequenceMode() {
+    const next = !sequenceMode;
+    setSequenceMode(next);
+    setSelectedObject(null);
+    if (next) {
+      startSequence(scenario);
+    } else {
+      stopSequence();
+      loadScene(scenario);
+    }
+  }
+
   useEffect(() => {
     loadScene("normal");
+    return () => stopSequence();
   }, []);
 
   function handleScenarioChange(newScenario) {
     setScenario(newScenario);
     setSelectedObject(null);
-    loadScene(newScenario);
+    if (sequenceMode) {
+      startSequence(newScenario);
+    } else {
+      loadScene(newScenario);
+    }
   }
 
   const objects = scene?.objects || [];
@@ -86,6 +142,13 @@ function App() {
           <div className="scene-toolbar">
             <span>LIVE PERCEPTION</span>
 
+            <button
+              className={`sequence-toggle ${sequenceMode ? "active" : ""}`}
+              onClick={toggleSequenceMode}
+            >
+              {sequenceMode ? "⏸ STOP TRAJECTORY" : "▶ LIVE TRAJECTORY"}
+            </button>
+
             <span className="scene-mode">3D FUSED VIEW</span>
           </div>
 
@@ -104,12 +167,18 @@ function App() {
                     selected={selectedObject?.object_id === object.object_id}
                   />
                 ))}
-                {selectedObject && (
-                  <ObjectPopup
-                    object={selectedObject}
-                    
-                  />
-                )}
+
+                {sequenceMode &&
+                  objects.map((object) =>
+                    object.smoothed_position ? (
+                      <SmoothedMarker
+                        key={`smoothed-${object.object_id}`}
+                        position={object.smoothed_position}
+                      />
+                    ) : null,
+                  )}
+
+                {selectedObject && <ObjectPopup object={selectedObject} />}
               </>
             )}
           </div>
@@ -375,6 +444,27 @@ function SceneObject({ object, onClick, selected }) {
   );
 }
 
+function SmoothedMarker({ position }) {
+  const x = position?.[0] || 0;
+  const y = position?.[1] || 0;
+
+  const left = 50 + (x / 30) * 40;
+  const top = 50 - (y / 30) * 40;
+
+  const clampedLeft = Math.max(8, Math.min(92, left));
+  const clampedTop = Math.max(8, Math.min(92, top));
+
+  return (
+    <div
+      className="smoothed-marker"
+      style={{
+        left: `${clampedLeft}%`,
+        top: `${clampedTop}%`,
+      }}
+    />
+  );
+}
+
 function ObjectDetails({ object, fusionWeights }) {
   const position = object.fused_position || [0, 0, 0];
 
@@ -458,7 +548,7 @@ function DetailRow({ name, trust }) {
   );
 }
 
-function ObjectPopup({ object}) {
+function ObjectPopup({ object }) {
   const position = object.fused_position || [0, 0, 0];
 
   const x = position?.[0] || 0;

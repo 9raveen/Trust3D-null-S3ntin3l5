@@ -78,7 +78,6 @@ button {
   overflow: visible;
   position: relative;
   z-index: 10;
-
 }
 
 .panel-header {
@@ -272,7 +271,7 @@ button {
   border: 1px solid #4a3820;
 }
 
-.alert>span {
+.alert > span {
   font-size: 17px;
 }
 
@@ -872,4 +871,56 @@ button {
 
 .scene-mode {
   color: #7f8ea2;
+}
+
+.sequence-toggle {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  color: #ccc;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.sequence-toggle.active {
+  background: #2d6a4f;
+  border-color: #40916c;
+  color: #fff;
+}
+.smoothed-marker {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px dashed #ffd166;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Append these to the end of your existing App.css */
+
+.sequence-toggle {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  color: #ccc;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.sequence-toggle.active {
+  background: #2d6a4f;
+  border-color: #40916c;
+  color: #fff;
+}
+.smoothed-marker {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px dashed #ffd166;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
