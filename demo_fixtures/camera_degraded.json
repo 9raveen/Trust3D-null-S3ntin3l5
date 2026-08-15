@@ -1,0 +1,177 @@
+{
+  "frame_id": "frame_camera_degraded_42",
+  "objects": [
+    {
+      "object_id": "3d036221",
+      "type": "human",
+      "position_3d": [
+        -12.656,
+        1.793,
+        0.864
+      ],
+      "velocity": [
+        -1.312,
+        0.308
+      ],
+      "sensor_observations": {
+        "camera": {
+          "confidence": 0.44,
+          "health": 0.5
+        },
+        "lidar": {
+          "confidence": 0.88,
+          "health": 1.0
+        },
+        "radar": {
+          "confidence": 0.84,
+          "health": 1.0
+        }
+      },
+      "trust_scores": {
+        "camera": 0.613,
+        "lidar": 0.93,
+        "radar": 0.917
+      },
+      "fused_position": [
+        -12.61,
+        1.683,
+        0.853
+      ],
+      "scene_confidence": 0.82,
+      "anomaly": {
+        "flag": true,
+        "sensor": "camera",
+        "reason": "camera_trust_significantly_below_other_sensors"
+      }
+    },
+    {
+      "object_id": "d7e840af",
+      "type": "human",
+      "position_3d": [
+        -12.706,
+        3.82,
+        1.056
+      ],
+      "velocity": [
+        -0.9,
+        0.208
+      ],
+      "sensor_observations": {
+        "camera": {
+          "confidence": 0.42,
+          "health": 0.5
+        },
+        "lidar": {
+          "confidence": 0.95,
+          "health": 1.0
+        },
+        "radar": {
+          "confidence": 0.92,
+          "health": 1.0
+        }
+      },
+      "trust_scores": {
+        "camera": 0.609,
+        "lidar": 0.973,
+        "radar": 0.955
+      },
+      "fused_position": [
+        -12.873,
+        3.647,
+        1.111
+      ],
+      "scene_confidence": 0.846,
+      "anomaly": {
+        "flag": true,
+        "sensor": "camera",
+        "reason": "camera_trust_significantly_below_other_sensors"
+      }
+    },
+    {
+      "object_id": "e91afa15",
+      "type": "vehicle",
+      "position_3d": [
+        16.193,
+        4.529,
+        1.893
+      ],
+      "velocity": [
+        0.018,
+        -0.03
+      ],
+      "sensor_observations": {
+        "camera": {
+          "confidence": 0.5,
+          "health": 0.5
+        },
+        "lidar": {
+          "confidence": 0.88,
+          "health": 1.0
+        },
+        "radar": {
+          "confidence": 0.83,
+          "health": 1.0
+        }
+      },
+      "trust_scores": {
+        "camera": 0.644,
+        "lidar": 0.941,
+        "radar": 0.918
+      },
+      "fused_position": [
+        16.386,
+        4.381,
+        1.773
+      ],
+      "scene_confidence": 0.834,
+      "anomaly": {
+        "flag": true,
+        "sensor": "camera",
+        "reason": "camera_trust_significantly_below_other_sensors"
+      }
+    },
+    {
+      "object_id": "085fb7c4",
+      "type": "vehicle",
+      "position_3d": [
+        -18.614,
+        -9.181,
+        0.615
+      ],
+      "velocity": [
+        3.975,
+        8.71
+      ],
+      "sensor_observations": {
+        "camera": {
+          "confidence": 0.51,
+          "health": 0.5
+        },
+        "lidar": {
+          "confidence": 0.9,
+          "health": 1.0
+        },
+        "radar": {
+          "confidence": 0.88,
+          "health": 1.0
+        }
+      },
+      "trust_scores": {
+        "camera": 0.639,
+        "lidar": 0.945,
+        "radar": 0.934
+      },
+      "fused_position": [
+        -18.501,
+        -9.103,
+        0.651
+      ],
+      "scene_confidence": 0.839,
+      "anomaly": {
+        "flag": true,
+        "sensor": "camera",
+        "reason": "camera_trust_significantly_below_other_sensors"
+      }
+    }
+  ]
+}

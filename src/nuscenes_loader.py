@@ -82,12 +82,53 @@ def load_real_scene(nusc, sample_token: str) -> list[GroundTruthObject]:
     return objects
 
 
+def select_demo_objects(gt_objects: list[GroundTruthObject], n: int = 4) -> list[GroundTruthObject]:
+    """
+    Real nuScenes samples can have 60+ annotated objects — far too many for
+    a readable demo (trust bars per object won't fit on a projector). Pick
+    the n closest objects to the ego vehicle instead, prioritizing variety
+    of type so the demo shows vehicles AND pedestrians, not just parked cars.
+
+    Excludes "movable_object" (traffic cones, barriers, debris) — technically
+    valid nuScenes objects but a weak story for a trust-in-perception demo.
+    """
+    import math
+
+    DEMO_WORTHY_TYPES = {"vehicle", "human"}
+
+    def dist(obj):
+        return math.hypot(obj.position_3d[0], obj.position_3d[1])
+
+    candidates = [o for o in gt_objects if o.type in DEMO_WORTHY_TYPES]
+
+    by_type: dict[str, list[GroundTruthObject]] = {}
+    for obj in candidates:
+        by_type.setdefault(obj.type, []).append(obj)
+    for t in by_type:
+        by_type[t].sort(key=dist)
+
+    selected = []
+    types = list(by_type.keys())
+    i = 0
+    while len(selected) < n and any(by_type.values()):
+        t = types[i % len(types)]
+        if by_type[t]:
+            selected.append(by_type[t].pop(0))
+        i += 1
+        if i > 1000:  # safety valve
+            break
+    return sorted(selected, key=dist)[:n]
+
+
 if __name__ == "__main__":
     # Example wiring — run this on your machine once nuscenes-devkit + data are set up
     from nuscenes.nuscenes import NuScenes
 
-    nusc = NuScenes(version="v1.0-mini", dataroot="/data/sets/nuscenes", verbose=True)
+    nusc = NuScenes(version="v1.0-mini", dataroot="C:/Users/vp532/data/sets/nuscenes", verbose=True)
     token = get_a_sample_token(nusc)
     objs = load_real_scene(nusc, token)
-    for o in objs:
+    print(f"\n{len(objs)} total annotated objects in this sample")
+    demo_objs = select_demo_objects(objs, n=4)
+    print(f"selected {len(demo_objs)} for demo:")
+    for o in demo_objs:
         print(o)
