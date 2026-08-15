@@ -16,8 +16,18 @@ from trust_engine import compute_trust_scores, detect_anomaly
 from fusion import fuse_positions, scene_confidence
 
 
-def build_frame(scenario: str = "normal", n_objects: int = 3, seed: int = 42) -> Frame:
-    gt_scene = load_mock_scene(n_objects=n_objects, seed=seed)
+def build_frame(
+    scenario: str = "normal",
+    n_objects: int = 3,
+    seed: int = 42,
+    gt_scene: list | None = None,
+) -> Frame:
+    """
+    gt_scene: pass a list[GroundTruthObject] from nuscenes_loader.load_real_scene()
+        to use real data instead of the mock generator. Leave None for mock.
+    """
+    if gt_scene is None:
+        gt_scene = load_mock_scene(n_objects=n_objects, seed=seed)
     obs_by_obj = generate_sensor_observations(gt_scene, scenario=scenario, seed=seed)
 
     rng = random.Random(seed)

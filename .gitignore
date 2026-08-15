@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# nuScenes dataset (large, don't commit)
+data/sets/nuscenes/
+*.zip
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# env/secrets
+.env
