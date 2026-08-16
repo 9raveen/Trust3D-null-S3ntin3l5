@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 // Fallback fixtures matching REAL_DEMO_OBJECTS and pipeline.py logic
 const MOCK_OBJECTS = {
@@ -7,7 +7,7 @@ const MOCK_OBJECTS = {
       object_id: "TRK-01",
       type: "vehicle",
       position_3d: [16.19, 4.53, 1.89],
-      fused_position: [16.20, 4.51, 1.89],
+      fused_position: [16.2, 4.51, 1.89],
       velocity: [0.02, -0.03],
       trust_scores: { camera: 0.92, lidar: 0.95, radar: 0.89 },
       scene_confidence: 0.94,
@@ -17,7 +17,7 @@ const MOCK_OBJECTS = {
       object_id: "TRK-02",
       type: "vehicle",
       position_3d: [-18.61, -9.18, 0.62],
-      fused_position: [-18.60, -9.20, 0.61],
+      fused_position: [-18.6, -9.2, 0.61],
       velocity: [3.98, 8.71],
       trust_scores: { camera: 0.91, lidar: 0.94, radar: 0.88 },
       scene_confidence: 0.88,
@@ -27,9 +27,9 @@ const MOCK_OBJECTS = {
       object_id: "TRK-03",
       type: "personnel",
       position_3d: [12.65, -18.79, 0.86],
-      fused_position: [12.66, -18.80, 0.86],
+      fused_position: [12.66, -18.8, 0.86],
       velocity: [-1.31, 0.31],
-      trust_scores: { camera: 0.93, lidar: 0.96, radar: 0.90 },
+      trust_scores: { camera: 0.93, lidar: 0.96, radar: 0.9 },
       scene_confidence: 0.81,
       anomaly: { flag: false, sensor: null, reason: null },
     },
@@ -37,10 +37,10 @@ const MOCK_OBJECTS = {
       object_id: "TRK-04",
       type: "structure",
       position_3d: [-22.71, 16.82, 1.06],
-      fused_position: [-22.70, 16.80, 1.05],
+      fused_position: [-22.7, 16.8, 1.05],
       velocity: [0.0, 0.0],
       trust_scores: { camera: 0.94, lidar: 0.97, radar: 0.91 },
-      scene_confidence: 0.90,
+      scene_confidence: 0.9,
       anomaly: { flag: false, sensor: null, reason: null },
     },
   ],
@@ -53,7 +53,11 @@ const MOCK_OBJECTS = {
       velocity: [0.02, -0.03],
       trust_scores: { camera: 0.34, lidar: 0.96, radar: 0.89 },
       scene_confidence: 0.87,
-      anomaly: { flag: true, sensor: "camera", reason: "camera_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "camera",
+        reason: "camera_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-02",
@@ -63,7 +67,11 @@ const MOCK_OBJECTS = {
       velocity: [3.98, 8.71],
       trust_scores: { camera: 0.38, lidar: 0.95, radar: 0.88 },
       scene_confidence: 0.84,
-      anomaly: { flag: true, sensor: "camera", reason: "camera_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "camera",
+        reason: "camera_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-03",
@@ -71,19 +79,27 @@ const MOCK_OBJECTS = {
       position_3d: [12.65, -18.79, 0.86],
       fused_position: [12.68, -18.75, 0.86],
       velocity: [-1.31, 0.31],
-      trust_scores: { camera: 0.31, lidar: 0.94, radar: 0.90 },
+      trust_scores: { camera: 0.31, lidar: 0.94, radar: 0.9 },
       scene_confidence: 0.79,
-      anomaly: { flag: true, sensor: "camera", reason: "camera_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "camera",
+        reason: "camera_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-04",
       type: "structure",
       position_3d: [-22.71, 16.82, 1.06],
-      fused_position: [-22.70, 16.80, 1.05],
+      fused_position: [-22.7, 16.8, 1.05],
       velocity: [0.0, 0.0],
       trust_scores: { camera: 0.35, lidar: 0.97, radar: 0.91 },
       scene_confidence: 0.86,
-      anomaly: { flag: true, sensor: "camera", reason: "camera_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "camera",
+        reason: "camera_trust_significantly_below_other_sensors",
+      },
     },
   ],
   radar_anomaly: [
@@ -91,41 +107,57 @@ const MOCK_OBJECTS = {
       object_id: "TRK-01",
       type: "vehicle",
       position_3d: [16.19, 4.53, 1.89],
-      fused_position: [16.20, 4.51, 1.89],
+      fused_position: [16.2, 4.51, 1.89],
       velocity: [0.02, -0.03],
       trust_scores: { camera: 0.93, lidar: 0.96, radar: 0.28 },
       scene_confidence: 0.89,
-      anomaly: { flag: true, sensor: "radar", reason: "radar_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "radar",
+        reason: "radar_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-02",
       type: "vehicle",
       position_3d: [-18.61, -9.18, 0.62],
-      fused_position: [-18.60, -9.20, 0.61],
+      fused_position: [-18.6, -9.2, 0.61],
       velocity: [3.98, 8.71],
       trust_scores: { camera: 0.91, lidar: 0.95, radar: 0.31 },
       scene_confidence: 0.83,
-      anomaly: { flag: true, sensor: "radar", reason: "radar_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "radar",
+        reason: "radar_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-03",
       type: "personnel",
       position_3d: [12.65, -18.79, 0.86],
-      fused_position: [12.66, -18.80, 0.86],
+      fused_position: [12.66, -18.8, 0.86],
       velocity: [-1.31, 0.31],
       trust_scores: { camera: 0.92, lidar: 0.95, radar: 0.25 },
       scene_confidence: 0.78,
-      anomaly: { flag: true, sensor: "radar", reason: "radar_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "radar",
+        reason: "radar_trust_significantly_below_other_sensors",
+      },
     },
     {
       object_id: "TRK-04",
       type: "structure",
       position_3d: [-22.71, 16.82, 1.06],
-      fused_position: [-22.70, 16.80, 1.05],
+      fused_position: [-22.7, 16.8, 1.05],
       velocity: [0.0, 0.0],
       trust_scores: { camera: 0.95, lidar: 0.97, radar: 0.29 },
       scene_confidence: 0.88,
-      anomaly: { flag: true, sensor: "radar", reason: "radar_trust_significantly_below_other_sensors" },
+      anomaly: {
+        flag: true,
+        sensor: "radar",
+        reason: "radar_trust_significantly_below_other_sensors",
+      },
     },
   ],
 };
@@ -145,7 +177,9 @@ async function fetchWithTimeout(url, timeoutMs = 400) {
 
 export async function getScene(scenario = "normal") {
   try {
-    const response = await fetchWithTimeout(`${API_URL}/scene?scenario=${scenario}`);
+    const response = await fetchWithTimeout(
+      `${API_URL}/scene?scenario=${scenario}`,
+    );
     if (!response.ok) {
       throw new Error(`Server returned ${response.status}`);
     }
